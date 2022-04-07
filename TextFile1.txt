@@ -1,0 +1,42 @@
+name: GitHub Actions Demo
+on: [push]
+jobs:
+    concurrency: 
+      group: ${{ github.ref }}
+      cancel-in-progress: true
+
+    build:
+        env:
+            TEAMS_WEBHOOK_URL = credentials('teams-build-webhook')
+            BUILD_ENV: "dev"
+    steps:
+        Build the Function:
+            runs-on: ubuntu-latest
+            steps:
+                if: ${{ BRANCH_NAME ==~ /^(sbx|dev|qa)$/ }}
+       
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+          terraform_wrapper: false
+
+        Init:
+            AWS_ACCESS_KEY_ID: ${{ secrets.TF_KEY_ADO_NONPROD }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_SECRET_ADO_NONPROD }}
+            TF_SECRETS: >-
+            [
+              { 
+                \"name\" : \"EXAMPLE_NAME\",
+                \"value\" : \"${{ secrets.EXP_SECRET }}\"
+               }
+            ]
+    
+    Prepare Function for Deployment:
+
+    Plan: 
+        
+
+    Apply: 
+        
